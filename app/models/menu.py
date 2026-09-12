@@ -1,10 +1,7 @@
-from sqlalchemy import String,Integer,Boolean,Text
-from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column
 
+from app.database.base import Base
 
-
-class Base(DeclarativeBase):
-    pass
 
 class MenuItem(Base):
     __tablename__ = "menu_items"
