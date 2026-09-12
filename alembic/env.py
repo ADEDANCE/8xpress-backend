@@ -10,6 +10,9 @@ from app.database.database import engine
 
 from app.database.base import Base
 from app.models.menu import MenuItem
+from app.models.user import User
+from app.models.order import Order
+from app.models.OrderItem import OrderItem
 
 # from app.config import DATABASE_URL
 
