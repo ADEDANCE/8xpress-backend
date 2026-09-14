@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.dependencies import get_db
+from app.dependencies import get_db, require_admin
 from app.models.menu import MenuItem
 from app.schemas.menu import MenuItemCreate, MenuItemResponse
 
@@ -30,6 +30,7 @@ async def get_menu(
 async def create_menu_item(
     data: MenuItemCreate,
     db: AsyncSession = Depends(get_db),
+    current_user = Depends(require_admin),
 ):
     # Create the database object
     menu_item = MenuItem(
