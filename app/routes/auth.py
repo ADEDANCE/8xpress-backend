@@ -90,20 +90,26 @@ async def login(
     access_token = create_access_token(user.id)
 
     return {
-        "access_token": access_token,
-        "token_type": "bearer",
-    }
+    "access_token": access_token,
+    "token_type": "bearer",
+    "user": {
+        "id": user.id,
+        "name": user.name,
+        "email": user.email,
+        "role": user.role,
+    },
+}
 
 
-# Get currently logged-in user
-@router.get("/me")
-async def get_me(
-    current_user: User = Depends(get_current_user),
-):
-    return {
-        "id": current_user.id,
-        "name": current_user.name,
-        "email": current_user.email,
-        "role": current_user.role,
-    }
+# # Get currently logged-in user
+# @router.get("/me")
+# async def get_me(
+#     current_user: User = Depends(get_current_user),
+# ):
+#     return {
+#         "id": current_user.id,
+#         "name": current_user.name,
+#         "email": current_user.email,
+#         "role": current_user.role,
+#     }
 
