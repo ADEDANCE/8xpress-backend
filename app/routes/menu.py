@@ -1,10 +1,10 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.dependencies import get_db, require_admin
 from app.models.menu import MenuItem
-from app.schemas.menu import MenuItemCreate, MenuItemResponse
+from app.schemas.menu import MenuItemCreate, MenuItemUpdate, MenuItemResponse
 
 
 router = APIRouter()
@@ -50,4 +50,38 @@ async def create_menu_item(
     await db.refresh(menu_item)
 
     # Send the newly created menu item back
+    return menu_item
+
+
+
+@router.put("/{menu_item_id}", response_model=MenuItemResponse)
+async def update_menu_item(
+    menu_item_id: int,
+    data: MenuItemUpdate,
+    db: AsyncSession = Depends(get_db),
+    #only an admin can use this endpoint.
+    current_user = Depends(require_admin),
+):
+    result = await db.execute(
+        select(MenuItem).where(MenuItem.id == menu_item_id)
+    )
+# get database object.
+    menu_item = result.scalar_one_or_none()
+# if it doesn't exist:
+    if not menu_item:
+        raise HTTPException(
+            status_code=404,
+            detail="Menu item not found"
+        )
+# update the object
+    menu_item.name = data.name
+    menu_item.description = data.description
+    menu_item.price = data.price
+    menu_item.image_url = data.image_url
+    menu_item.is_available = data.is_available
+# saves the changes
+    await db.commit()
+    # gets the updated version from the database
+    await db.refresh(menu_item)
+
     return menu_item
