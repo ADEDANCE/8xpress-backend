@@ -56,6 +56,7 @@ async def create_menu_item(
 
 @router.put("/{menu_item_id}", response_model=MenuItemResponse)
 async def update_menu_item(
+    # Gets  ID from the URL
     menu_item_id: int,
     data: MenuItemUpdate,
     db: AsyncSession = Depends(get_db),
@@ -85,3 +86,36 @@ async def update_menu_item(
     await db.refresh(menu_item)
 
     return menu_item
+
+
+
+
+@router.delete("/{menu_item_id}")
+async def delete_menu_item(
+     # Gets  ID from the URL
+    menu_item_id: int,
+    db: AsyncSession = Depends(get_db),
+    current_user = Depends(require_admin),
+):
+# find the menu item
+    result = await db.execute(
+        select(MenuItem).where(MenuItem.id == menu_item_id)
+    )
+# get item
+    menu_item = result.scalar_one_or_none()
+
+    if not menu_item:
+        raise HTTPException(
+            status_code=404,
+            detail="Menu item not found"
+        )
+
+# delete item
+    await db.delete(menu_item)
+
+# save changes
+    await db.commit()
+
+    return {
+        "message": "Menu item deleted successfully"
+    }
