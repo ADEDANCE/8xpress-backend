@@ -15,6 +15,13 @@ class Order(Base):
 
     order_type: Mapped[str] = mapped_column(String(20))
 
+    phone: Mapped[str] = mapped_column(String(20))
+
+    delivery_address: Mapped[str | None] = mapped_column(
+        String(255),
+        nullable=True
+    )
+
     status: Mapped[str] = mapped_column(
         String(20),
         default="pending"
