@@ -11,3 +11,16 @@ class OrderItemCreate(BaseModel):
 class OrderCreate(BaseModel):
     order_type: Literal["pickup", "delivery"]
     items: list[OrderItemCreate]
+
+
+
+
+
+class OrderStatusUpdate(BaseModel):
+    status: Literal[
+        "pending",
+        "confirmed",
+        "preparing",
+        "ready",
+        "completed",
+    ]
