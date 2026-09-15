@@ -50,3 +50,18 @@ async def require_admin(
         )
 
         return current_user
+
+
+
+
+async def require_customer(
+    current_user: User = Depends(get_current_user),
+) -> User:
+
+    if current_user.role != "customer":
+        raise HTTPException(
+            status_code=403,
+            detail="Customer access required"
+        )
+
+    return current_user
