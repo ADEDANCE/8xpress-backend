@@ -1,6 +1,8 @@
 from fastapi import FastAPI
 from app.routes.menu import router as menu_router
 from app.routes.auth import router as auth_router
+from app.routes.order import router as order_router
+
 
 app = FastAPI()
 
@@ -17,6 +19,12 @@ app.include_router(
     tags=["Authentication"]
 )
 
+
+app.include_router(
+    order_router,
+    prefix="/orders",
+    tags=["Orders"]
+)
 
 
 
