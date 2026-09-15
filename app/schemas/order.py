@@ -10,6 +10,8 @@ class OrderItemCreate(BaseModel):
 
 class OrderCreate(BaseModel):
     order_type: Literal["pickup", "delivery"]
+    phone: str
+    delivery_address: str | None = None
     items: list[OrderItemCreate]
 
 
